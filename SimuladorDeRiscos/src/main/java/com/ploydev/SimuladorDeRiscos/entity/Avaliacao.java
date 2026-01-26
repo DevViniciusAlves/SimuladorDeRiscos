@@ -29,7 +29,7 @@ public class Avaliacao {
     @Column(nullable = false)
     private Integer scoreTotal;
     @Column(nullable = false)
-    private nivelRiscoEnum nivelRisco;
+    private NivelRiscoEnum nivelRisco;
     @Column(nullable = false, updatable = false)
     private LocalDateTime dataCriacao;
 

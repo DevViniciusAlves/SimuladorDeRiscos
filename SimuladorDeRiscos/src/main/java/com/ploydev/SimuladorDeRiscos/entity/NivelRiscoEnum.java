@@ -1,6 +1,6 @@
 package com.ploydev.SimuladorDeRiscos.entity;
 
-public enum nivelRiscoEnum {
+public enum NivelRiscoEnum {
 
     BAIXO,
     MEDIO,
