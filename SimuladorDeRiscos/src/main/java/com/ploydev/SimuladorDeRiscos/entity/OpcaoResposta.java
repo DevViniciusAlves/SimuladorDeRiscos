@@ -1,30 +1,35 @@
 package com.ploydev.SimuladorDeRiscos.entity;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name= "respostas")
+@Table(name = "opcaoResposta")
 @Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 
-public class Resposta {
+public class OpcaoResposta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    @ManyToOne
-    private Avaliacao avaliacao;
-    @ManyToOne
-    private OpcaoResposta opcaoResposta;
+
+    @Column(nullable = false, length = 255)
+    private String texto;
+
     @Column(nullable = false)
+    private Integer porcentagem;
+
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean ativo;
+
+    @ManyToOne
+    private Pergunta pergunta;
+
 }

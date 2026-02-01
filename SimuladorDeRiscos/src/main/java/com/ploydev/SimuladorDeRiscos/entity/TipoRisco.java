@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name= "típo_risco")
+@Table(name= "típoRisco")
 @Getter @Setter
 @NoArgsConstructor  @AllArgsConstructor
 
@@ -21,13 +21,15 @@ public class TipoRisco {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     @Column(nullable = false, length = 255)
-    private String nivelRisco;
+    private NivelRiscoEnum nivelRisco;
     @Column(length = 255)
     private String descricao;
     @Column(nullable = false)
-    private String scoreMinimo;
+    private Integer porcentagemMinima;
     @Column(nullable = false)
-    private String scoreMaximo;
+    private Integer porcentagemMaxima;
+    @Column(nullable = false)
+    private Boolean ativo;
 
     @OneToMany(mappedBy = "tipoRisco", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Simulacao> simulacoes  = new ArrayList<>();

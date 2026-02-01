@@ -30,6 +30,7 @@ public class Pergunta {
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean ativo;
 
+
     @OneToMany(mappedBy = "pergunta", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Avaliacao> avaliacoes = new ArrayList<>();
+    private List<OpcaoResposta> opcoes = new ArrayList<>();
 }

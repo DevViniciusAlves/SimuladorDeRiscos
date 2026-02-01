@@ -1,0 +1,59 @@
+package com.ploydev.SimuladorDeRiscos.service;
+
+import com.ploydev.SimuladorDeRiscos.entity.Usuario;
+import com.ploydev.SimuladorDeRiscos.repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+public class UsuarioService {
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    public Usuario criarUsuario(Usuario usuario) throws Exception {
+        Usuario usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());
+
+        if (usuarioExistente != null) {
+            throw new Exception("Email já existente");
+        }
+
+        usuario.setDataCadastro(LocalDateTime.now());
+        usuario.setDataAtualizacao(LocalDateTime.now());
+
+        return usuarioRepository.save(usuario);
+    }
+    public Usuario buscarPorId(UUID id){
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario" + id + "não foi encotrado"));
+    }
+    public Usuario buscarPorEmail(String email){
+        Usuario usuario = usuarioRepository.findByEmail(email);
+        if (usuario == null){
+            throw new RuntimeException("Email não encontrado");
+        }
+        return usuario;
+    }
+    public List<Usuario> buscarTodos(){
+        return usuarioRepository.findAll();
+    }
+    public Usuario atualizarUsuario(UUID id, Usuario usuarioAtualizado){
+        Usuario atualizarUsuario = buscarPorId(id);
+        atualizarUsuario.setNome(usuarioAtualizado.getNome());
+        atualizarUsuario.setEmail(usuarioAtualizado.getEmail());
+        atualizarUsuario.setSenha(usuarioAtualizado.getSenha());
+        atualizarUsuario.setDataAtualizacao(LocalDateTime.now());
+
+        return usuarioRepository.save(atualizarUsuario);
+    }
+    public void desativarUsuario(UUID id){
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow (() -> new RuntimeException("Usuario" + id + "não foi encontrado"));
+
+        usuario.setAtivo(false);
+        usuarioRepository.save(usuario);
+    }
+}

@@ -30,6 +30,8 @@ public class Simulacao {
     private String impactoOperacional;
     @Column(nullable = false, updatable = false)
     private LocalDateTime dataCriacao;
+    @Column(nullable = false)
+    private Boolean ativo;
 
 
 }

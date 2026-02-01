@@ -24,10 +24,10 @@ public class Avaliacao {
     private UUID id;
     @ManyToOne
     private Usuario usuario;
-    @OneToMany(mappedBy = "respostas", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "avaliacao", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Resposta> respostas = new ArrayList<>();
     @Column(nullable = false)
-    private Integer scoreTotal;
+    private Integer porcentagemTotal;
     @Column(nullable = false)
     private NivelRiscoEnum nivelRisco;
     @Column(nullable = false, updatable = false)

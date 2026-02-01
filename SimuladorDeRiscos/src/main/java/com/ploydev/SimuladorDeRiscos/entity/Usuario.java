@@ -5,8 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.cglib.core.Local;
 
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +33,8 @@ public class Usuario {
     @Column(nullable = false, length = 255)
     private String senha;
 
-    private Date dataCadastro;
+    private LocalDateTime dataCadastro;
+    private LocalDateTime dataAtualizacao;
     private Boolean ativo;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
