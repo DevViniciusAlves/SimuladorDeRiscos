@@ -24,6 +24,8 @@ public class RespostaService {
         // ADD a opcao de resposta
         resposta.setOpcaoResposta(opcaoResposta);
 
+        resposta.setAtivo(true);
+
         return respostaRepository.save(resposta);
     }
     public Resposta buscarRespostaPorId(UUID id){
@@ -40,12 +42,21 @@ public class RespostaService {
 
         return respostaRepository.save(atualizarResposta);
     }
-    public void desativarResposta(UUID id){
+    public Resposta desativarResposta(UUID id){
         Resposta resposta = respostaRepository.findById(id)
                 .orElseThrow (()-> new RuntimeException("Resposta com" + id + "não encontrada"));
 
         resposta.setAtivo(false);
-        respostaRepository.save(resposta);
+        return respostaRepository.save(resposta);
+
+    }
+    public Resposta ativarResposta(UUID id) {
+        Resposta resposta = respostaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Resposta com" + id + "não encontrada"));
+
+        resposta.setAtivo(true);
+        return respostaRepository.save(resposta);
+
     }
 
 }

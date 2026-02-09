@@ -16,6 +16,7 @@ public class UsuarioService {
 
     public Usuario criarUsuario(Usuario usuario) throws Exception {
         Usuario usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());
+        usuario.setAtivo(true);
 
         if (usuarioExistente != null) {
             throw new Exception("Email já existente");
@@ -26,34 +27,55 @@ public class UsuarioService {
 
         return usuarioRepository.save(usuario);
     }
-    public Usuario buscarPorId(UUID id){
+
+    public Usuario buscarPorId(UUID id) {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario" + id + "não foi encotrado"));
     }
-    public Usuario buscarPorEmail(String email){
+
+    public Usuario buscarPorEmail(String email) {
         Usuario usuario = usuarioRepository.findByEmail(email);
-        if (usuario == null){
+        if (usuario == null) {
             throw new RuntimeException("Email não encontrado");
         }
         return usuario;
     }
-    public List<Usuario> buscarTodos(){
+
+    public List<Usuario> buscarTodosUsuarios() {
         return usuarioRepository.findAll();
     }
-    public Usuario atualizarUsuario(UUID id, Usuario usuarioAtualizado){
+
+
+    public Usuario atualizarUsuario(UUID id, Usuario usuarioAtualizado) {
         Usuario atualizarUsuario = buscarPorId(id);
         atualizarUsuario.setNome(usuarioAtualizado.getNome());
         atualizarUsuario.setEmail(usuarioAtualizado.getEmail());
         atualizarUsuario.setSenha(usuarioAtualizado.getSenha());
+        atualizarUsuario.setCpf(usuarioAtualizado.getCpf());
         atualizarUsuario.setDataAtualizacao(LocalDateTime.now());
 
         return usuarioRepository.save(atualizarUsuario);
     }
-    public void desativarUsuario(UUID id){
+
+    public Usuario desativarUsuario(UUID id) {
         Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow (() -> new RuntimeException("Usuario" + id + "não foi encontrado"));
+                .orElseThrow(() -> new RuntimeException("Usuario" + id + "não foi encontrado"));
 
         usuario.setAtivo(false);
-        usuarioRepository.save(usuario);
+        usuario.setDataAtualizacao(LocalDateTime.now());
+
+
+        return usuarioRepository.save(usuario);
     }
+    public Usuario ativarUsuario(UUID id){
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Usuario" + id + "não foi encontrado"));
+
+        usuario.setAtivo(true);
+        usuario.setDataAtualizacao(LocalDateTime.now());
+
+        return usuarioRepository.save(usuario);
+
+    }
+
 }

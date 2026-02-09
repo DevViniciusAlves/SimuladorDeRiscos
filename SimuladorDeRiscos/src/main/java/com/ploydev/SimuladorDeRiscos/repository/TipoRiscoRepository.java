@@ -9,5 +9,5 @@ import java.util.List;
 import java.util.UUID;
 @Repository
 public interface TipoRiscoRepository extends JpaRepository<TipoRisco, UUID> {
-    TipoRisco findByNivelRisco(String nivelRisco);
+    TipoRisco findByNivelRisco(NivelRiscoEnum nivelRisco);
 }

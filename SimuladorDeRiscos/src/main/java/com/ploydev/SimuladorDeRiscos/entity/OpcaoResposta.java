@@ -1,5 +1,6 @@
 package com.ploydev.SimuladorDeRiscos.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class OpcaoResposta {
     private Boolean ativo;
 
     @ManyToOne
+    @JsonIgnore
     private Pergunta pergunta;
 
 }

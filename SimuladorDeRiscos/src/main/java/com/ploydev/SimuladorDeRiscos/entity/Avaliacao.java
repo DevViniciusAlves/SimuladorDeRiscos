@@ -1,5 +1,6 @@
 package com.ploydev.SimuladorDeRiscos.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,14 +24,17 @@ public class Avaliacao {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     @ManyToOne
+    @JsonIgnore
     private Usuario usuario;
     @OneToMany(mappedBy = "avaliacao", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Resposta> respostas = new ArrayList<>();
     @Column(nullable = false)
     private Integer porcentagemTotal;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private NivelRiscoEnum nivelRisco;
     @Column(nullable = false, updatable = false)
     private LocalDateTime dataCriacao;
+    private LocalDateTime dataAtualizacao;
+    private Boolean ativo;
 
 }

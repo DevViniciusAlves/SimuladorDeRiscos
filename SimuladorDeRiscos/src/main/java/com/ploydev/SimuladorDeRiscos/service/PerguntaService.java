@@ -25,27 +25,42 @@ public class PerguntaService {
         }
         return perguntaRepository.save(pergunta);
     }
-    public Pergunta buscarPerguntaPorId(UUID id){
+
+    public Pergunta buscarPerguntaPorId(UUID id) {
         return perguntaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pergunta com o" + id + "não foi encontrada"));
     }
-    public List<Pergunta> buscarTodasAsPerguntas(){
+
+    public List<Pergunta> buscarTodasAsPerguntas() {
         return perguntaRepository.findAll();
     }
-    public Pergunta atualizarPergunta(UUID id, Pergunta perguntaAtualizada){
+
+    public Pergunta atualizarPergunta(UUID id, Pergunta perguntaAtualizada) {
         Pergunta atualizarPergunta = buscarPerguntaPorId(id);
         atualizarPergunta.setPergunta(perguntaAtualizada.getPergunta());
         atualizarPergunta.setCategoria(perguntaAtualizada.getCategoria());
 
         return perguntaRepository.save(atualizarPergunta);
     }
-    public void desativarPergunta(UUID id){
+
+    public Pergunta desativarPergunta(UUID id) {
         Pergunta pergunta = perguntaRepository.findById(id)
-                .orElseThrow (()-> new RuntimeException("Pergunta com" + id + "não foi encontrada"));
+                .orElseThrow(() -> new RuntimeException("Pergunta com" + id + "não foi encontrada"));
 
         pergunta.setAtivo(false);
         perguntaRepository.save(pergunta);
+
+        return perguntaRepository.save(pergunta);
     }
+    public Pergunta ativarPergunta(UUID id){
+        Pergunta pergunta = perguntaRepository.findById(id)
+                .orElseThrow (()-> new RuntimeException("Pergunta com" + id + "não foi encontrada"));
+
+        pergunta.setAtivo(true);
+        perguntaRepository.save(pergunta);
+
+        return perguntaRepository.save(pergunta);
+}
     public List<Pergunta> buscarPerguntasAtivas(){
         return perguntaRepository.findByAtivoTrue();
     }

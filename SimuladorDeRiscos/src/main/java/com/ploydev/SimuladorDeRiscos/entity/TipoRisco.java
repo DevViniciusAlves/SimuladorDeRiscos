@@ -5,13 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.UUID;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
-@Table(name= "típoRisco")
+@Table(name= "tipoRisco")
 @Getter @Setter
 @NoArgsConstructor  @AllArgsConstructor
 
@@ -20,6 +20,7 @@ public class TipoRisco {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 255)
     private NivelRiscoEnum nivelRisco;
     @Column(length = 255)

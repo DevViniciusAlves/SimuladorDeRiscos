@@ -24,6 +24,7 @@ public class AvaliacaoService {
         avaliacao.setPorcentagemTotal(0);
         avaliacao.setDataCriacao(LocalDateTime.now());
         avaliacao.setNivelRisco(null);
+        avaliacao.setAtivo(true);
 
         return avaliacaoRepository.save(avaliacao);
     }
@@ -35,6 +36,19 @@ public class AvaliacaoService {
 
     public List<Avaliacao> buscarAvaliacaoPorUsuario(Usuario usuario) {
         return avaliacaoRepository.findByUsuario(usuario);
+    }
+    public Avaliacao finalizarAvaliacao(UUID id) {
+        Avaliacao avaliacao = avaliacaoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Avaliação com id " + id + " não encontrada"));
+
+        Integer nivel = calcularNivelRisco(avaliacao);
+        NivelRiscoEnum nivelRisco = determinarNivelRisco(nivel);
+
+        avaliacao.setPorcentagemTotal(nivel);
+        avaliacao.setNivelRisco(nivelRisco);
+        avaliacao.setDataAtualizacao(LocalDateTime.now());
+
+        return avaliacaoRepository.save(avaliacao);
     }
 
     public Integer calcularNivelRisco(Avaliacao avaliacao) {
@@ -62,13 +76,23 @@ public class AvaliacaoService {
         }
         throw new RuntimeException("Nenhum nivel foi encontrado com" + nivel);
     }
-    public Avaliacao finalizarAvaliacao(Avaliacao avaliacao){
-        Integer nivel = calcularNivelRisco(avaliacao); // CHAMANDO O METODO PARA CALCULAR
 
-        NivelRiscoEnum nivelRisco = determinarNivelRisco(nivel);
+    public Avaliacao desativarAvaliacao(UUID id) {
+        Avaliacao avaliacao = avaliacaoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Avaliação" + id + "não foi encontrada"));
 
-        avaliacao.setPorcentagemTotal(nivel);
-        avaliacao.setNivelRisco(nivelRisco);
+        avaliacao.setAtivo(false);
+        avaliacao.setDataAtualizacao(LocalDateTime.now());
+
+        return avaliacaoRepository.save(avaliacao);
+    }
+
+    public Avaliacao ativarAvaliacao(UUID id) {
+        Avaliacao avaliacao = avaliacaoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Avaliação" + id + "não foi encontrada"));
+
+        avaliacao.setAtivo(true);
+        avaliacao.setDataAtualizacao(LocalDateTime.now());
 
         return avaliacaoRepository.save(avaliacao);
     }

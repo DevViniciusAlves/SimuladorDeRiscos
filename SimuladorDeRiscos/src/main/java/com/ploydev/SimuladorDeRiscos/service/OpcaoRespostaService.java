@@ -15,33 +15,47 @@ public class OpcaoRespostaService {
     @Autowired
     private OpcaoRespostaRepository opcaoRespostaRepository;
 
-    public OpcaoResposta criarOpcao(OpcaoResposta opcao) throws Exception{
+    public OpcaoResposta criarOpcao(OpcaoResposta opcao) throws Exception {
         OpcaoResposta opcaoExistente = opcaoRespostaRepository.findByTexto(opcao.getTexto());
 
-        if (opcaoExistente != null){
+        if (opcaoExistente != null) {
             throw new Exception("Opção já existente");
         }
+
+        opcao.setAtivo(true);
         return opcaoRespostaRepository.save(opcao);
     }
-    public OpcaoResposta buscarOpcaoPorId(UUID id){
+
+    public OpcaoResposta buscarOpcaoRespostaPorId(UUID id) {
         return opcaoRespostaRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Opção com o" + id + "não existe"));
+                .orElseThrow(() -> new RuntimeException("Opção com o" + id + "não existe"));
     }
-    public List<OpcaoResposta> listarOpcoesDaPergunta(Pergunta pergunta){
+
+    public List<OpcaoResposta> buscarOpcoesDaPergunta(Pergunta pergunta) {
         return opcaoRespostaRepository.findByPergunta(pergunta);
     }
-    public OpcaoResposta atualizarOpcao(UUID id, OpcaoResposta opcaoAtualizada){
-        OpcaoResposta atualizarOpcao = buscarOpcaoPorId(id);
+
+    public OpcaoResposta atualizarOpcao(UUID id, OpcaoResposta opcaoAtualizada) {
+        OpcaoResposta atualizarOpcao = buscarOpcaoRespostaPorId(id);
         atualizarOpcao.setTexto(opcaoAtualizada.getTexto());
         atualizarOpcao.setPorcentagem(opcaoAtualizada.getPorcentagem());
 
         return opcaoRespostaRepository.save(atualizarOpcao);
     }
-    public void desativarOpcao(UUID id){
+
+    public OpcaoResposta desativarOpcao(UUID id) {
         OpcaoResposta opcaoResposta = opcaoRespostaRepository.findById(id)
-                .orElseThrow (()-> new RuntimeException("Opção com" + id + "não encontrada"));
+                .orElseThrow(() -> new RuntimeException("Opção com" + id + "não encontrada"));
 
         opcaoResposta.setAtivo(false);
-        opcaoRespostaRepository.save(opcaoResposta);
+        return opcaoRespostaRepository.save(opcaoResposta);
+    }
+
+    public OpcaoResposta ativarOpcao(UUID id) {
+        OpcaoResposta opcaoResposta = opcaoRespostaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Opção com" + id + "não encontrada"));
+
+        opcaoResposta.setAtivo(true);
+        return opcaoRespostaRepository.save(opcaoResposta);
     }
 }
