@@ -16,10 +16,19 @@ public class UsuarioService {
 
     public Usuario criarUsuario(Usuario usuario) throws Exception {
         Usuario usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());
+        Usuario usuarioPorCpf = usuarioRepository.findByCpf(usuario.getCpf());
         usuario.setAtivo(true);
 
         if (usuarioExistente != null) {
             throw new Exception("Email já existente");
+        }
+
+        if (usuarioPorCpf != null) {
+            throw new Exception("CPF já cadastrado");
+        }
+
+        if (usuario.getSenha() == null || usuario.getSenha().length() < 6) {
+            throw new Exception("Senha deve ter ao menos 6 caracteres");
         }
 
         usuario.setDataCadastro(LocalDateTime.now());
@@ -30,15 +39,11 @@ public class UsuarioService {
 
     public Usuario buscarPorId(UUID id) {
         return usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario" + id + "não foi encotrado"));
+                .orElseThrow(() -> new RuntimeException("Usuario " + id + " não foi encotrado"));
     }
 
     public Usuario buscarPorEmail(String email) {
-        Usuario usuario = usuarioRepository.findByEmail(email);
-        if (usuario == null) {
-            throw new RuntimeException("Email não encontrado");
-        }
-        return usuario;
+        return usuarioRepository.findByEmail(email);
     }
 
     public List<Usuario> buscarTodosUsuarios() {

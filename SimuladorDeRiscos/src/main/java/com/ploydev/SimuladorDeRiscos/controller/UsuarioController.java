@@ -2,6 +2,7 @@ package com.ploydev.SimuladorDeRiscos.controller;
 
 import com.ploydev.SimuladorDeRiscos.dto.usuarioDTO.UsuarioRequestDTO;
 import com.ploydev.SimuladorDeRiscos.dto.usuarioDTO.UsuarioResponseDTO;
+import com.ploydev.SimuladorDeRiscos.dto.usuarioDTO.UsuarioLoginRequestDTO;
 import com.ploydev.SimuladorDeRiscos.entity.Usuario;
 import com.ploydev.SimuladorDeRiscos.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -21,7 +23,7 @@ public class UsuarioController {
 
 
     @PostMapping("/cadastro")
-    public ResponseEntity<UsuarioResponseDTO> criarUsuario(@RequestBody UsuarioRequestDTO dto){
+    public ResponseEntity<?> criarUsuario(@RequestBody UsuarioRequestDTO dto){
         try{
             Usuario usuario = new Usuario();
             usuario.setNome(dto.getNome());
@@ -38,12 +40,39 @@ public class UsuarioController {
                     criado.getCpf(),
                     criado.getAtivo(),
                     criado.getDataCadastro()
-        );
+            );
             return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
 
-    }catch (Exception e){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UsuarioLoginRequestDTO dto){
+        try{
+            Usuario usuario = usuarioService.buscarPorEmail(dto.getEmail());
+            if (usuario == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Email não encontrado"));
+            }
+
+            if (!usuario.getSenha().equals(dto.getSenha())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Senha incorreta"));
+            }
+
+            UsuarioResponseDTO responseDTO = new UsuarioResponseDTO(
+                    usuario.getId(),
+                    usuario.getNome(),
+                    usuario.getEmail(),
+                    usuario.getCpf(),
+                    usuario.getAtivo(),
+                    usuario.getDataCadastro()
+            );
+
+            return ResponseEntity.ok(responseDTO);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
     }
 
     @GetMapping("/{id}")

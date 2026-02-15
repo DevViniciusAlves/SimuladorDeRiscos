@@ -46,6 +46,7 @@ public class AvaliacaoService {
 
         avaliacao.setPorcentagemTotal(nivel);
         avaliacao.setNivelRisco(nivelRisco);
+        avaliacao.setAtivo(false); // marca como finalizada
         avaliacao.setDataAtualizacao(LocalDateTime.now());
 
         return avaliacaoRepository.save(avaliacao);
@@ -89,7 +90,7 @@ public class AvaliacaoService {
 
     public Avaliacao ativarAvaliacao(UUID id) {
         Avaliacao avaliacao = avaliacaoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Avaliação" + id + "não foi encontrada"));
+                .orElseThrow(() -> new RuntimeException("Avaliação" + id + "não foi encontrada com sucesso"));
 
         avaliacao.setAtivo(true);
         avaliacao.setDataAtualizacao(LocalDateTime.now());
